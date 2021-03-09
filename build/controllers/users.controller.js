@@ -10,35 +10,32 @@ var Joi = require('joi');
 
 exports.create = function (req, res) {
   var hashedPassword = bcrypt.hashSync(req.body.password, 10);
-  bcrypt.hash(req.body.password, 15).then(function (hash) {
-    var user = new User({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email,
-      password: hashedPassword
+  var user = new User({
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    email: req.body.email,
+    password: hashedPassword
+  });
+  user.save().then(function (data) {
+    var userToken = jwt.sign({
+      id: data._id
+    }, 'supersecret', {
+      expiresIn: 86400
     });
-    user.save().then(function (data) {
-      var userToken = jwt.sign({
-        id: data._id
-      }, 'supersecret', {
-        expiresIn: 86400
-      });
-      res.send({
-        token: userToken,
-        auth: true
-      });
-    })["catch"](function (err) {
-      console.log(err.message);
-      res.status(500).send({
-        error: 500,
-        message: err.message || "some error occured while creating user"
-      });
+    res.send({
+      token: userToken,
+      auth: true
+    });
+  })["catch"](function (err) {
+    res.status(500).send({
+      error: 500,
+      message: err.message || 'some error occured while creating user'
     });
   });
 };
 
-exports.getOne = function (req, res) {
-  User.findById(req.params.id).then(function (data) {
+exports.findOne = function (req, res) {
+  User.findById(req.params.id).populate('orders').then(function (data) {
     if (!data) {
       res.status(404).send({
         message: "User with id ".concat(req.params.id, " not found") // message:"User with id" + req.params.id +"not found"
@@ -57,7 +54,7 @@ exports.login = function (req, res) {
     email: req.body.email
   }).then(function (data) {
     if (!data) {
-      return res.status(401).send({
+      return res.status(404).send({
         auth: false,
         token: null,
         message: "No user find with email ".concat(req.body.email)
@@ -70,7 +67,7 @@ exports.login = function (req, res) {
       return res.status(401).send({
         auth: false,
         token: null,
-        message: "Password is not valid"
+        message: 'password is not valid'
       });
     }
 

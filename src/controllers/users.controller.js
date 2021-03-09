@@ -5,46 +5,43 @@ const Joi = require('joi');
 
 exports.create = (req, res) => {
 
-    let hashedPassword = bcrypt.hashSync(req.body.password, 10);
+  let hashedPassword = bcrypt.hashSync(req.body.password, 10);
 
-    bcrypt.hash(req.body.password, 15)
-    .then(hash => {
-        const user = new User({
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            email: req.body.email,
-            password: hashedPassword
-        });
-        user.save()
-            .then((data) => {
-                let userToken = jwt.sign({
-                    id: data._id,
+  const user = new User({
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    email: req.body.email,
+    password: hashedPassword,
+  });
 
-                },
-                'supersecret',
-                {
-                    expiresIn: 86400,
-                }
-                );
-            res.send({
-            token:userToken,
-             auth: true
-         })
+  user
+    .save()
+    .then((data) => {
+      let userToken = jwt.sign(
+        {
+          id: data._id,
+        },
+        'supersecret',
+        {
+          expiresIn: 86400,
+        }
+      );
+      res.send({
+        token: userToken,
+        auth: true,
+      });
     })
     .catch((err) => {
-        console.log(err.message);    
-        res.status(500).send({
-            error: 500,
-            message: err.message || "some error occured while creating user"
-        })
-        })
-    })
+      res.status(500).send({
+        error: 500,
+        message: err.message || 'some error occured while creating user',
+      });
+    });
+};
 
-}
-
-
-exports.getOne = (req, res) => {
-    User.findById(req.params.id)
+exports.findOne = (req, res) => {
+  User.findById(req.params.id)
+    .populate('orders')
     .then((data) => {
       if (!data) {
         res.status(404).send({
@@ -55,44 +52,49 @@ exports.getOne = (req, res) => {
       res.send(data);
     })
     .catch((err) => res.send(err));
-}
-
+};
 
 exports.login = (req, res) => {
-    User.findOne({email: req.body.email})
-    .then((data) => {
-        if (!data) {
-            return res.status(401).send({
-                auth: false,
-                token: null,
-                message: `No user find with email ${req.body.email}`
-            });
-        }
-
-        let passwordIsValid = bcrypt.compareSync(req.body.password, data.password);
-
-        if (!passwordIsValid) {
-            return res.status(401).send({
-                auth: false,
-                token: null,
-                message: "Password is not valid"
-            });
-        }
-
-        let userToken = jwt.sign(
-            {id:data._id}, 
-            'supersecret',
-            {expiresIn:86400}
-        );
-
-        res.send({
-            auth: true,
-            token: userToken,
+  User.findOne({
+    email: req.body.email,
+  })
+      .then((data) => {
+        
+      if (!data) {
+        return res.status(404).send({
+          auth: false,
+          token: null,
+          message: `No user find with email ${req.body.email}`,
         });
+      }
 
+      let passwordIsValid = bcrypt.compareSync(
+        req.body.password,
+        data.password
+      );
+
+      if (!passwordIsValid) {
+        return res.status(401).send({
+          auth: false,
+          token: null,
+          message: 'password is not valid',
+        });
+      }
+
+      let userToken = jwt.sign(
+        {
+          id: data._id,
+        },
+        'supersecret',
+        {expiresIn: 86400}
+      );
+
+      res.send({
+        auth: true,
+        token: userToken,
+      });
     })
     .catch((err) => {
-        res.send(err);
+      res.send(err);
     });
-}
-
+};
