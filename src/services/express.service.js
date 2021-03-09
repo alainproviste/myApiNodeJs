@@ -1,3 +1,4 @@
+require('dotenv').config();
 import express from 'express';
 const app = express();
 const apiRouter = require('../routes');
@@ -6,7 +7,7 @@ const cors = require('cors');
 
 exports.start = () => {
     
-    const port = 3000;
+    const port = process.env.PORT;
     app.use(cors());
     app.use(bodyParser.json());
     app.use('/api/v1', apiRouter);
