@@ -1,0 +1,17 @@
+[
+    {
+        "email": "bob.leponge@ynov.com",
+        "firstName": "Bob",
+        "lasttName": "L'éponge"
+    },
+    {
+        "email": "patrick.etoile@ynov.com",
+        "firstName": "Patrick",
+        "lasttName": "Étoile"
+    },
+    {
+        "email": "carlo.tentacule@ynov.com",
+        "firstName": "Carlo",
+        "lasttName": "Tentacule"
+    }
+] 
