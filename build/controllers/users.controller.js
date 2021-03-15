@@ -50,7 +50,7 @@ exports.getOne = function (req, res) {
 };
 
 exports.login = function (req, res) {
-  User.findOne({
+  User.getOne({
     email: req.body.email
   }).then(function (data) {
     if (!data) {

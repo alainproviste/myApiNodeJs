@@ -55,7 +55,7 @@ exports.getOne = (req, res) => {
 };
 
 exports.login = (req, res) => {
-  User.findOne({
+  User.getOne({
     email: req.body.email,
   })
       .then((data) => {
