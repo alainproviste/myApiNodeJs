@@ -39,7 +39,7 @@ exports.create = (req, res) => {
     });
 };
 
-exports.findOne = (req, res) => {
+exports.getOne = (req, res) => {
   User.findById(req.params.id)
     .populate('orders')
     .then((data) => {
