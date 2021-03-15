@@ -13,8 +13,11 @@ exports.create = function (req, res) {
   var user = new User({
     firstName: req.body.firstName,
     lastName: req.body.lastName,
+    phone: req.body.phone,
     email: req.body.email,
-    password: hashedPassword
+    password: hashedPassword,
+    isAdmin: false,
+    address: req.body.address
   });
   user.save().then(function (data) {
     var userToken = jwt.sign({
