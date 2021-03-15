@@ -5,7 +5,7 @@ const verifyToken = require('../middlewares/verifyToken');
 const userSchemaValidation = require('../middlewares/validators/users.validator');
 
 router.post('/users', userSchemaValidation ,user.create);
-router.get('/users/:id', verifyToken, user.getOne);
+router.get('/users/:id', verifyToken, user.findOne);
 router.post('/login', user.login);
 
 module.exports = router;

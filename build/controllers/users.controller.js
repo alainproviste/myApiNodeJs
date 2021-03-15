@@ -34,7 +34,7 @@ exports.create = function (req, res) {
   });
 };
 
-exports.getOne = function (req, res) {
+exports.findOne = function (req, res) {
   User.findById(req.params.id).populate('orders').then(function (data) {
     if (!data) {
       res.status(404).send({
@@ -50,7 +50,7 @@ exports.getOne = function (req, res) {
 };
 
 exports.login = function (req, res) {
-  User.getOne({
+  User.findOne({
     email: req.body.email
   }).then(function (data) {
     if (!data) {

@@ -39,7 +39,7 @@ exports.create = (req, res) => {
     });
 };
 
-exports.getOne = (req, res) => {
+exports.findOne = (req, res) => {
   User.findById(req.params.id)
     .populate('orders')
     .then((data) => {
@@ -55,7 +55,7 @@ exports.getOne = (req, res) => {
 };
 
 exports.login = (req, res) => {
-  User.getOne({
+  User.findOne({
     email: req.body.email,
   })
       .then((data) => {
