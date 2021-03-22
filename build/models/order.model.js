@@ -19,4 +19,4 @@ var orderSchema = new Schema({
     ref: 'Product'
   }]
 });
-module.exports = mongoose.model('order', orderSchema);
+module.exports = mongoose.model('Order', orderSchema);
