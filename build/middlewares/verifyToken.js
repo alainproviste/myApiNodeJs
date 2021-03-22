@@ -14,7 +14,7 @@ function verifyToken(req, res, next) {
     });
   }
 
-  jwt.verify(token, 'supersecret', function (err, decoded) {
+  jwt.verify(token, process.env.SECRET_JWT, function (err, decoded) {
     if (err) {
       return res.status(401).send({
         auth: false,

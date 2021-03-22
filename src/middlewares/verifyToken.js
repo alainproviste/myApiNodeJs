@@ -10,7 +10,7 @@ function verifyToken(req, res, next) {
             message:"missing token, please login"
         })
     }
-    jwt.verify(token, 'supersecret', (err, decoded) => {
+    jwt.verify(token, process.env.SECRET_JWT, (err, decoded) => {
         if (err) {
             return res.status(401).send({
                 auth: false,
