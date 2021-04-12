@@ -1,4 +1,4 @@
 # myApiNodeJs
 
-Lien du site:
-https://projetvue.herokuapp.com/
+Lien du déploiment heroku:
+https://ynovnodejs.herokuapp.com/
