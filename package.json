@@ -20,6 +20,7 @@
     "@babel/core": "^7.13.8",
     "@babel/node": "^7.13.0",
     "@babel/preset-env": "^7.13.9",
+    "@stripe/stripe-js": "^1.13.2",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
@@ -27,6 +28,7 @@
     "express": "^4.17.1",
     "joi": "^17.4.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.11.16"
+    "mongoose": "^5.11.16",
+    "stripe": "^8.139.0"
   }
 }

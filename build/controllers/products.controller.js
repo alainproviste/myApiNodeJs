@@ -42,3 +42,44 @@ exports.getOne = function (req, res) {
     res.send(err);
   });
 };
+
+exports["delete"] = function (req, res) {
+  Product.findByIdAndDelete(req.params.id).then(function () {
+    res.send({
+      "delete": true
+    });
+  })["catch"](function (err) {
+    console.log(err.message);
+    res.status(500).send({
+      error: 500,
+      message: err.message || "NULL"
+    });
+  });
+};
+
+exports.update = function (req, res) {
+  var product = Product.findById(req.params.id);
+  Product.findByIdAndUpdate(req.params.id, {
+    title: req.body.title,
+    description: req.body.description,
+    price: req.body.price,
+    img: req.body.img
+  }).then(function () {
+    product.then(function (data) {
+      res.send({
+        product: data,
+        update: true
+      });
+    })["catch"](function (err) {
+      res.status(500).send({
+        error: 500,
+        message: err.message || "NULL"
+      });
+    });
+  })["catch"](function (err) {
+    res.status(500).send({
+      error: 500,
+      message: err.message || "NULL"
+    });
+  });
+};

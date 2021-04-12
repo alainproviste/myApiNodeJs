@@ -4,6 +4,8 @@ const User = require('../models/user.model');
 exports.create = (req, res) => {
     const order = new Order({
         total: req.body.total,
+        date: req.body.date,
+        status: req.body.status,
         user: req.body.user,
         products: req.body.products
     });
@@ -51,3 +53,42 @@ exports.getAll = (req, res) => {
         }
     );
 }
+
+exports.getOne = (req, res) => {
+    var id = req.params.id;
+    Order.findById(id)
+    .then((data) => {
+        res.send(data);
+
+    })
+    .catch((err) => {
+        console.log(err.message);
+        res.send(err);
+    })
+}
+
+
+
+exports.updateOne = (req, res) => {
+    var order = Order.findById(req.params.id)
+
+    Order.findByIdAndUpdate(
+        req.params.id,
+        {
+            status: req.body.status
+        }
+    )
+    .then((data) => {
+        order
+        res.send({
+        order: data
+        })
+    })
+    .catch((err) => {
+        res.status(500).send({
+        error: 500,
+        message: err.message || "NULL"
+        })
+    })
+
+};

@@ -15,13 +15,11 @@ const productSchema = new Schema({
     },
     description: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     },
     img: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     }
 })
 

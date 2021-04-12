@@ -16,7 +16,7 @@ exports.create = function (req, res) {
     phone: req.body.phone,
     email: req.body.email,
     password: hashedPassword,
-    isAdmin: false,
+    isAdmin: req.body.isAdmin,
     address: req.body.address
   });
   user.save().then(function (data) {
@@ -52,6 +52,33 @@ exports.findOne = function (req, res) {
   });
 };
 
+exports.update = function (req, res) {
+  var user = User.findById(req.params.id);
+  User.findByIdAndUpdate(req.params.id, {
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    phone: req.body.phone,
+    address: req.body.address
+  }).then(function () {
+    user.then(function (data) {
+      res.send({
+        user: data,
+        update: true
+      });
+    })["catch"](function (err) {
+      res.status(500).send({
+        error: 500,
+        message: err.message || "NULL"
+      });
+    });
+  })["catch"](function (err) {
+    res.status(500).send({
+      error: 500,
+      message: err.message || "NULL"
+    });
+  });
+};
+
 exports.login = function (req, res) {
   User.findOne({
     email: req.body.email
@@ -75,7 +102,8 @@ exports.login = function (req, res) {
     }
 
     var userToken = jwt.sign({
-      id: data._id
+      id: data._id,
+      isAdmin: data.isAdmin
     }, 'supersecret', {
       expiresIn: 86400
     });
@@ -85,5 +113,34 @@ exports.login = function (req, res) {
     });
   })["catch"](function (err) {
     res.send(err);
+  });
+};
+
+exports["delete"] = function (req, res) {
+  User.findByIdAndDelete(req.params.id).then(function () {
+    res.send({
+      "delete": true
+    });
+  })["catch"](function (err) {
+    console.log(err.message);
+    res.status(500).send({
+      error: 500,
+      message: err.message || "NULL"
+    });
+  });
+};
+
+exports.findAll = function (req, res) {
+  User.find().populate('orders').then(function (data) {
+    res.send({
+      users: data,
+      response: true
+    });
+  })["catch"](function (err) {
+    console.log(err.message);
+    res.status(500).send({
+      error: 500,
+      message: err.message || "NULL"
+    });
   });
 };

@@ -52,3 +52,53 @@ exports.getOne = (req, res) => {
         res.send(err);
     })
 }
+
+exports.delete = (req, res) => {
+    Product.findByIdAndDelete(req.params.id)
+        .then(() => {
+            res.send({
+                delete: true
+            })
+        })
+        .catch((err) => {
+            console.log(err.message);
+            res.status(500).send({
+                error: 500,
+                message: err.message || "NULL"
+            })
+        })
+  }
+
+exports.update = (req, res) => {
+    var product = Product.findById(req.params.id)
+    Product.findByIdAndUpdate(
+        req.params.id,
+        {
+            title: req.body.title,
+            description: req.body.description,
+            price: req.body.price,
+            img: req.body.img
+        }
+    )
+    .then(() => {
+        product
+            .then((data) => {
+                res.send({
+                    product: data,
+                    update: true,
+                })
+            })
+            .catch((err) => {
+                res.status(500).send({
+                    error: 500,
+                    message: err.message || "NULL"
+                })
+            })
+    })
+    .catch((err) => {
+        res.status(500).send({
+            error: 500,
+            message: err.message || "NULL"
+        })
+    })
+}

@@ -11,7 +11,7 @@ const userSchemaValidation = (req, res, next) => {
         address: Joi.object().required()
     });
     const validation = userValidationSchema.validate(req.body);
-    // console.log(validation);
+    console.log(validation);
     if (validation.error) {
         return res.send({
             error: validation.error

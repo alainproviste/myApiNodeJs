@@ -1,8 +1,7 @@
 const jwt = require('jsonwebtoken');
 
-function verifyToken(req, res, next) {
+function verifyAdmin(req, res, next) {
     let token = req.headers.authorization;
-    console.log(token);
     if (!token) {
         return res.status(401).send({
             auth: false,
@@ -11,15 +10,24 @@ function verifyToken(req, res, next) {
         })
     }
     jwt.verify(token, process.env.SECRET_JWT, (err, decoded) => {
-        if (err) {
+        if(decoded.isAdmin == false) {
             return res.status(401).send({
                 auth: false,
                 token: null,
-                message:"no authorized"
+                message: "Your are not an admin !"
             })
+        }
+        else{
+            if(err) {
+                return res.status(401).send({
+                    auth: false,
+                    token: null,
+                    message:"no authorized"
+                })
+            }
         }
         next();
     })
 }
 
-module.exports = verifyToken;
+module.exports = verifyAdmin;

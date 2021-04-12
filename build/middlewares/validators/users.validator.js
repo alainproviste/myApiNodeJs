@@ -12,7 +12,8 @@ var userSchemaValidation = function userSchemaValidation(req, res, next) {
     isAdmin: Joi["boolean"]().required(),
     address: Joi.object().required()
   });
-  var validation = userValidationSchema.validate(req.body); // console.log(validation);
+  var validation = userValidationSchema.validate(req.body);
+  console.log(validation);
 
   if (validation.error) {
     return res.send({
